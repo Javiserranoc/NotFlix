@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeInDown, FadeOutDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { BRICK, CREAM, INK } from '../../movies/theme';
 import { clearToast, getToast, subscribeToast } from '../toast';
 
 /** Va una vez, en el layout raíz. */
@@ -30,6 +31,6 @@ export function ToastHost() {
 
 const styles = StyleSheet.create({
   wrap: { position: 'absolute', left: 24, right: 24, alignItems: 'center' },
-  toast: { backgroundColor: '#F6EEEF', borderRadius: 12, paddingHorizontal: 16, paddingVertical: 10 },
-  text: { color: '#0E0A0B', fontSize: 14, fontWeight: '600', textAlign: 'center' },
+  toast: { backgroundColor: CREAM, borderRadius: 12, borderWidth: 2, borderColor: INK, boxShadow: `2px 3px 0 ${BRICK}`, paddingHorizontal: 16, paddingVertical: 10 },
+  text: { color: INK, fontSize: 14, fontWeight: '600', textAlign: 'center' },
 });

@@ -39,7 +39,7 @@ import type { MovieEntry } from '../schema';
 import { airedSeasons, parseSeasons, parseWatchedSeasons, seasonsTotals } from '../seasons';
 import { formatDate, pickedDayIso } from '../stats';
 import { fetchDetails, useTmdbEnabled } from '../tmdb';
-import { DISPLAY, GOLD, moviesTheme as th, VELVET } from '../theme';
+import { BRICK, CREAM, DISPLAY, GOLD, INK, moviesTheme as th, sectionTitle, stickerText, VELVET } from '../theme';
 
 /** Alto de la cabecera; el parallax se calcula contra el. */
 const HERO_HEIGHT = 300;
@@ -406,7 +406,7 @@ function Hero({ entry: e, scrollY }: { entry: MovieEntry; scrollY: SharedValue<n
       ) : null}
       {/* Oscurece arriba (los iconos de la cabecera van encima) y funde abajo. */}
       <LinearGradient
-        colors={['rgba(14,10,11,0.72)', 'rgba(14,10,11,0.25)', 'rgba(14,10,11,0.82)', th.background]}
+        colors={['rgba(18,6,8,0.72)', 'rgba(18,6,8,0.25)', 'rgba(18,6,8,0.82)', th.background]}
         locations={[0, 0.32, 0.78, 1]}
         style={StyleSheet.absoluteFill}
       />
@@ -450,7 +450,7 @@ function RatingRow({ rating, onPick }: { rating: number | null; onPick: (v: numb
             onPress={() => onPick(v)}
             style={[styles.ratingCell, { backgroundColor: on ? GOLD : th.surfaceHigh }]}
           >
-            <Text style={[styles.ratingNum, { color: on ? '#1A1206' : th.textMuted }]}>{v}</Text>
+            <Text style={[styles.ratingNum, { color: on ? INK : th.textMuted }]}>{v}</Text>
           </Pressable>
         );
       })}
@@ -490,7 +490,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.18)',
+    borderColor: CREAM,
   },
   glassTint: {
     position: 'absolute',
@@ -498,7 +498,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(20,14,16,0.34)',
+    backgroundColor: 'rgba(18,6,8,0.55)',
     backdropFilter: 'blur(14px)',
   } as ViewStyle,
   // Recorta el backdrop: con el parallax baja más despacio que la ficha y, sin
@@ -516,29 +516,26 @@ const styles = StyleSheet.create({
     paddingRight: 14 + 42 * 2 + 10 + 12,
     justifyContent: 'center',
   },
-  topTitle: { color: th.text, fontFamily: DISPLAY, fontSize: 24, letterSpacing: 0.4, height: 42, lineHeight: 42 },
+  topTitle: { color: th.text, fontFamily: DISPLAY, textTransform: 'uppercase', fontSize: 19, letterSpacing: 0.4, height: 42, lineHeight: 46 },
   heroRow: { flexDirection: 'row', alignItems: 'flex-end', gap: 16 },
   heroText: { flex: 1, gap: 6 },
-  posterShadow: {
-    borderRadius: 8,
-    shadowColor: '#000',
-    shadowOpacity: 0.55,
-    shadowRadius: 12,
-    shadowOffset: { width: 0, height: 6 },
-    elevation: 10,
-  },
-  title: { color: th.text, fontFamily: DISPLAY, fontSize: 34, lineHeight: 34, letterSpacing: 0.4 },
+  posterShadow: { borderRadius: 8 },
+  title: { ...stickerText(2, 2), fontSize: 26, lineHeight: 32, letterSpacing: 0.4 },
   genres: { color: th.textMuted, fontSize: 12 },
   ticket: {
     backgroundColor: GOLD,
     borderRadius: 10,
+    borderWidth: 2,
+    borderColor: INK,
+    boxShadow: `2px 3px 0 ${BRICK}`,
+    transform: [{ rotate: '4deg' }],
     paddingVertical: 7,
     paddingHorizontal: 9,
     alignItems: 'center',
     gap: 1,
   },
-  ticketNum: { color: '#1A1206', fontSize: 20, fontWeight: '800', fontVariant: ['tabular-nums'] },
-  ticketLabel: { color: 'rgba(26,18,6,0.65)', fontSize: 8, fontWeight: '800', letterSpacing: 1.1 },
+  ticketNum: { color: INK, fontSize: 20, fontWeight: '800', fontVariant: ['tabular-nums'] },
+  ticketLabel: { color: INK, fontSize: 8, fontWeight: '800', letterSpacing: 1.1 },
   muted: { color: th.textMuted, fontSize: 14 },
   text: { color: th.text, fontSize: 16 },
   paragraph: { lineHeight: 24 },
@@ -555,7 +552,7 @@ const styles = StyleSheet.create({
   seasonNum: { color: th.text, fontSize: 15, fontWeight: '800', width: 30, fontVariant: ['tabular-nums'] },
   seasonName: { color: th.textMuted, fontSize: 13, flex: 1 },
   seasonMeta: { color: th.text, fontSize: 13, fontVariant: ['tabular-nums'] },
-  sectionLabel: { color: th.textMuted, fontSize: 11, fontWeight: '600', letterSpacing: 1.2 },
+  sectionLabel: sectionTitle,
   wrap: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   choice: {
     flexDirection: 'row',

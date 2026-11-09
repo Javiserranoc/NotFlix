@@ -1,4 +1,3 @@
-import { LinearGradient } from 'expo-linear-gradient';
 import { router, Stack } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
@@ -11,7 +10,7 @@ import { movieMeta, Poster } from '../components/MovieRow';
 import type { MovieKind } from '../enums';
 import { randomWishlist, useWishlist } from '../repo';
 import type { MovieEntry } from '../schema';
-import { DISPLAY, GOLD, moviesTheme as th } from '../theme';
+import { GOLD, INK, moviesTheme as th, stickerFace, stickerText } from '../theme';
 
 /** Se sortea entre películas o entre series, nunca las dos a la vez. */
 const FILTERS = [
@@ -136,11 +135,6 @@ export function MoviesRouletteScreen({ kind }: { kind?: MovieKind }) {
   return (
     <View style={styles.root}>
       <Stack.Screen options={{ title: '¿Qué vemos?' }} />
-      <LinearGradient
-        colors={['#3A0B14', 'rgba(58,11,20,0)']}
-        style={styles.curtain}
-        pointerEvents="none"
-      />
 
       <View style={styles.middle}>
         <Text style={styles.intro}>
@@ -226,18 +220,9 @@ export function MoviesRouletteScreen({ kind }: { kind?: MovieKind }) {
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: th.background },
-  curtain: { position: 'absolute', left: 0, right: 0, top: 0, height: 260, opacity: 0.85 },
   middle: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 20, paddingHorizontal: 28 },
   intro: { color: th.textMuted, fontSize: 13, textAlign: 'center' },
-  posterWrap: {
-    borderRadius: 14,
-    overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOpacity: 0.65,
-    shadowRadius: 26,
-    shadowOffset: { width: 0, height: 14 },
-    elevation: 18,
-  },
+  posterWrap: { borderRadius: 8 },
   posterEmpty: {
     backgroundColor: th.surface,
     borderWidth: 1,
@@ -246,7 +231,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   info: { alignItems: 'center', gap: 6, minHeight: 74 },
-  title: { color: th.text, fontFamily: DISPLAY, fontSize: 34, lineHeight: 36, textAlign: 'center' },
+  title: { ...stickerText(2, 2), fontSize: 28, lineHeight: 34, textAlign: 'center' },
   muted: { color: th.textMuted, fontSize: 14 },
   filters: { flexDirection: 'row', gap: 7 },
   chip: {
@@ -262,11 +247,11 @@ const styles = StyleSheet.create({
   primary: {
     height: 52,
     borderRadius: 16,
-    backgroundColor: th.accent,
+    ...stickerFace,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  primaryText: { color: th.onAccent, fontSize: 16, fontWeight: '700' },
+  primaryText: { color: INK, fontSize: 16, fontWeight: '800' },
   secondary: {
     height: 52,
     borderRadius: 16,

@@ -5,7 +5,7 @@ import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-na
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Icon } from '../../core/ui/Icon';
-import { GOLD, moviesTheme as th } from '../theme';
+import { BRICK, CREAM, INK, moviesTheme as th } from '../theme';
 import { useMoviesKind } from './KindSwitch';
 
 /** Alto de la barra flotante y su margen: lo que hay que dejar libre abajo. */
@@ -16,8 +16,8 @@ export const TAB_BAR_MARGIN = 16;
 export const useTabBarSpace = () => useSafeAreaInsets().bottom + TAB_BAR_HEIGHT + TAB_BAR_MARGIN + 14;
 
 /**
- * Barra de pestañas del módulo: flota sobre el contenido y está recortada como
- * una entrada de cine (muescas en los cantos y perforaciones doradas arriba).
+ * Barra de pestañas del módulo: flota sobre el contenido, recortada como una
+ * entrada de cine (muescas en los cantos) y con el canto rojo de las pegatinas.
  *
  * La usa `TabList asChild`, así que recibe los `TabTrigger` como hijos y añade
  * el botón de añadir, que no es una pestaña sino un modal.
@@ -28,15 +28,13 @@ export const MoviesTabBar = forwardRef<View, { children?: ReactNode }>(function 
 
   return (
     <View ref={ref} style={[styles.bar, { bottom: TAB_BAR_MARGIN + insets.bottom }]}>
-      {/* Perforaciones de película en el borde de arriba. */}
-      <View style={styles.perforations} pointerEvents="none">
-        {Array.from({ length: 22 }, (_, i) => (
-          <View key={i} style={styles.hole} />
-        ))}
-      </View>
       {/* Muescas laterales: el troquel de la entrada. */}
-      <View style={[styles.notch, { left: -7 }]} pointerEvents="none" />
-      <View style={[styles.notch, { right: -7 }]} pointerEvents="none" />
+      <View style={[styles.notchClip, { left: -2 }]} pointerEvents="none">
+        <View style={[styles.notch, { left: -9 }]} />
+      </View>
+      <View style={[styles.notchClip, { right: -2 }]} pointerEvents="none">
+        <View style={[styles.notch, { right: -9 }]} />
+      </View>
 
       {children}
 
@@ -61,8 +59,8 @@ export const TabItem = forwardRef<
   View,
   PressableProps & { icon: string; label: string; isFocused?: boolean }
 >(function TabItem({ icon, label, isFocused, ...props }, ref) {
-  // Capsula dorada: el oro marca donde estas y el carmesi queda para el '+'.
-  const color = isFocused ? '#1A1206' : th.textMuted;
+  // Cápsula crema: marca dónde estás y el carmesí queda para el '+'.
+  const color = isFocused ? INK : th.textMuted;
   // La cápsula crece con muelle en vez de aparecer de golpe.
   const focus = useSharedValue(isFocused ? 1 : 0);
   useEffect(() => {
@@ -99,36 +97,25 @@ const styles = StyleSheet.create({
     right: TAB_BAR_MARGIN,
     height: TAB_BAR_HEIGHT,
     borderRadius: 22,
-    backgroundColor: '#171013',
-    borderWidth: 1,
-    borderColor: th.border,
+    backgroundColor: INK,
+    borderWidth: 2,
+    borderColor: CREAM,
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 8,
-    shadowColor: '#000',
-    shadowOpacity: 0.65,
-    shadowRadius: 18,
-    shadowOffset: { width: 0, height: 10 },
-    elevation: 16,
+    boxShadow: `3px 4px 0 ${BRICK}`,
   },
-  perforations: {
-    position: 'absolute',
-    left: 16,
-    right: 16,
-    top: 0,
-    height: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    overflow: 'hidden',
-  },
-  hole: { width: 7, height: 1, backgroundColor: GOLD, opacity: 0.3 },
+  // Solo asoma medio círculo: el mordisco del troquel.
+  notchClip: { position: 'absolute', top: TAB_BAR_HEIGHT / 2 - 11, width: 10, height: 18, overflow: 'hidden' },
   notch: {
     position: 'absolute',
-    top: TAB_BAR_HEIGHT / 2 - 6,
-    width: 12,
-    height: 12,
-    borderRadius: 6,
+    top: 0,
+    width: 18,
+    height: 18,
+    borderRadius: 9,
     backgroundColor: th.background,
+    borderWidth: 2,
+    borderColor: CREAM,
   },
   item: { flex: 1, height: 48, borderRadius: 16, alignItems: 'center', justifyContent: 'center' },
   capsule: {
@@ -138,7 +125,8 @@ const styles = StyleSheet.create({
     top: 0,
     bottom: 0,
     borderRadius: 16,
-    backgroundColor: GOLD,
+    backgroundColor: CREAM,
+    boxShadow: `2px 3px 0 ${BRICK}`,
   },
   itemContent: { alignItems: 'center', gap: 2 },
   label: { fontSize: 10, letterSpacing: 0.2 },

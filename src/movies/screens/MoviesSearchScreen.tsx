@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 14,
     backgroundColor: th.surface,
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: th.accent,
     flexDirection: 'row',
     alignItems: 'center',
@@ -229,5 +229,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 9,
   },
-  manualText: { color: th.text, fontSize: 15, fontWeight: '700', fontFamily: DISPLAY, letterSpacing: 0.5 },
+  manualText: { color: th.text, fontSize: 16, lineHeight: 22, fontFamily: DISPLAY, textTransform: 'uppercase', letterSpacing: 0.5 },
 });

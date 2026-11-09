@@ -12,7 +12,7 @@ import { useTabBarSpace } from '../components/MoviesTabBar';
 import { KIND_META, STATUS_CHOICES } from '../enums';
 import { useMovieCounts, useRecentlyWatched, useWishlist } from '../repo';
 import { formatHours, useMovieStats } from '../stats';
-import { DISPLAY, GOLD, moviesTheme as th } from '../theme';
+import { BRICK, DISPLAY, GOLD, INK, moviesTheme as th, sectionTitle, stickerFace } from '../theme';
 
 /**
  * Inicio del módulo: responde a "¿qué veo esta noche?", no es una lista.
@@ -48,7 +48,7 @@ export function MoviesHomeScreen() {
               Busca una {label} y se guarda con su póster, su sinopsis y su duración.
             </Text>
             <PressScale onPress={() => router.push(search)} style={styles.emptyBtn}>
-              <Icon name="magnify" size={20} color={th.onAccent} />
+              <Icon name="magnify" size={20} color={INK} />
               <Text style={styles.emptyBtnText}>Buscar mi primera {label}</Text>
             </PressScale>
             <Pressable hitSlop={8} onPress={() => router.push(`/edit?kind=${kind}` as never)}>
@@ -145,26 +145,27 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     height: 76,
     borderRadius: 16,
-    borderWidth: 1,
-    borderColor: '#4A1520',
-    backgroundColor: '#23101A',
+    borderWidth: 2,
+    borderColor: GOLD,
+    backgroundColor: th.surface,
+    boxShadow: `3px 4px 0 ${BRICK}`,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 14,
     paddingHorizontal: 16,
     overflow: 'hidden',
   },
-  rouletteTitle: { color: th.text, fontSize: 16, fontWeight: '700' },
+  rouletteTitle: { color: th.text, fontFamily: DISPLAY, textTransform: 'uppercase', fontSize: 20, lineHeight: 24 },
   muted: { color: th.textMuted, fontSize: 12 },
   sectionHead: { flexDirection: 'row', alignItems: 'baseline', paddingHorizontal: 20 },
-  sectionLabel: { flex: 1, color: th.textMuted, fontSize: 11, fontWeight: '600', letterSpacing: 1.2 },
+  sectionLabel: { ...sectionTitle, flex: 1 },
   link: { color: GOLD, fontSize: 12, fontWeight: '700' },
-  shelf: { paddingHorizontal: 20, gap: 10 },
+  shelf: { paddingHorizontal: 20, paddingBottom: 4, gap: 10 },
   addTile: {
     width: 96,
     height: 144,
     borderRadius: 8,
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: th.border,
     borderStyle: 'dashed',
     alignItems: 'center',
@@ -182,18 +183,18 @@ const styles = StyleSheet.create({
   rating: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   ratingText: { color: th.text, fontSize: 14, fontWeight: '700', fontVariant: ['tabular-nums'] },
   emptyBox: { alignItems: 'center', gap: 14, paddingTop: 54, paddingHorizontal: 34 },
-  emptyTitle: { color: th.text, fontFamily: DISPLAY, fontSize: 30, lineHeight: 32, letterSpacing: 0.5 },
+  emptyTitle: { color: th.text, fontFamily: DISPLAY, textTransform: 'uppercase', fontSize: 26, lineHeight: 32, letterSpacing: 0.5, textAlign: 'center' },
   emptyText: { color: th.textMuted, fontSize: 14, lineHeight: 20, textAlign: 'center' },
   emptyBtn: {
     marginTop: 6,
     height: 50,
     paddingHorizontal: 20,
     borderRadius: 16,
-    backgroundColor: th.accent,
+    ...stickerFace,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 9,
   },
-  emptyBtnText: { color: th.onAccent, fontSize: 15, fontWeight: '700' },
+  emptyBtnText: { color: INK, fontSize: 15, fontWeight: '800' },
   emptyLink: { color: th.textMuted, fontSize: 13, fontWeight: '600' },
 });

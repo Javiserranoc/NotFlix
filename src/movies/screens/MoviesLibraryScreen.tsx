@@ -32,7 +32,7 @@ import {
 } from '../repo';
 import type { MovieEntry } from '../schema';
 import { shareMovies } from '../share';
-import { DISPLAY, GOLD, moviesTheme as th } from '../theme';
+import { GOLD, INK, moviesTheme as th, stickerFace, stickerText } from '../theme';
 
 const COLUMNS = 3;
 const GAP = 12;
@@ -220,7 +220,7 @@ export function MoviesLibraryScreen({ autoFocus = false }: { autoFocus?: boolean
                 }
                 style={styles.emptyBtn}
               >
-                <Icon name="magnify" size={18} color={th.onAccent} />
+                <Icon name="magnify" size={18} color={INK} />
                 <Text style={styles.emptyBtnText}>
                   {query ? `Buscar “${query.trim()}” en TMDB` : `Buscar tu primera ${meta.label.toLowerCase()}`}
                 </Text>
@@ -334,14 +334,14 @@ const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: th.background },
   header: { paddingTop: 14, paddingBottom: 16, gap: 12 },
   titleRow: { flexDirection: 'row', alignItems: 'flex-end', gap: 10 },
-  title: { flex: 1, color: th.text, fontFamily: DISPLAY, fontSize: 32, lineHeight: 34, letterSpacing: 0.5 },
+  title: { ...stickerText(2, 2), flex: 1, fontSize: 30, lineHeight: 36, letterSpacing: 0.5 },
   count: { color: th.textMuted, fontSize: 13, paddingBottom: 4 },
   shareBtn: { marginLeft: 'auto', paddingBottom: 4 },
   search: {
     height: 44,
     borderRadius: 12,
     backgroundColor: th.surface,
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: th.border,
     flexDirection: 'row',
     alignItems: 'center',
@@ -381,9 +381,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  cellPoster: { borderRadius: 8, overflow: 'hidden' },
-  seal: { position: 'absolute', top: 4, right: 4 },
-  statusLine: { position: 'absolute', left: 0, right: 0, bottom: 0, height: 3 },
+  cellPoster: { borderRadius: 8 },
+  seal: { position: 'absolute', top: -7, right: -6, transform: [{ rotate: '8deg' }] },
+  statusLine: { position: 'absolute', left: 2, right: 2, bottom: 2, height: 4 },
   cellTitle: { color: th.text, fontSize: 12, fontWeight: '600' },
   emptyBox: { alignItems: 'center', gap: 14, paddingTop: 54, paddingHorizontal: 20 },
   empty: { color: th.textMuted, textAlign: 'center', fontSize: 14 },
@@ -391,12 +391,12 @@ const styles = StyleSheet.create({
     height: 46,
     paddingHorizontal: 18,
     borderRadius: 14,
-    backgroundColor: th.accent,
+    ...stickerFace,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
   },
-  emptyBtnText: { color: th.onAccent, fontSize: 14, fontWeight: '700' },
+  emptyBtnText: { color: INK, fontSize: 14, fontWeight: '800' },
   undo: {
     position: 'absolute',
     left: 16,

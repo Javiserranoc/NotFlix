@@ -11,6 +11,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
+import { INK } from '../../movies/theme';
 import { Icon } from './Icon';
 
 /** Cuánto hay que arrastrar para que la acción cuente. */
@@ -72,7 +73,7 @@ export function SwipeRow({
       {left ? (
         <Animated.View style={[styles.behind, { backgroundColor: left.color }, leftStyle]}>
           <View style={styles.action}>
-            <Icon name={left.icon} size={20} color="#0E0A0B" />
+            <Icon name={left.icon} size={20} color={INK} />
             <Text style={styles.label}>{left.label}</Text>
           </View>
         </Animated.View>
@@ -82,7 +83,7 @@ export function SwipeRow({
           style={[styles.behind, styles.behindRight, { backgroundColor: right.color }, rightStyle]}
         >
           <View style={styles.action}>
-            <Icon name={right.icon} size={20} color="#0E0A0B" />
+            <Icon name={right.icon} size={20} color={INK} />
             <Text style={styles.label}>{right.label}</Text>
           </View>
         </Animated.View>
@@ -109,5 +110,5 @@ const styles = StyleSheet.create({
   },
   behindRight: { alignItems: 'flex-end' },
   action: { paddingHorizontal: 20, alignItems: 'center', gap: 2 },
-  label: { color: '#0E0A0B', fontSize: 11, fontWeight: '800' },
+  label: { color: INK, fontSize: 11, fontWeight: '800' },
 });

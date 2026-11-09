@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '../../core/ui/Icon';
 import { formatRating } from './MovieRow';
-import { GOLD } from '../theme';
+import { GOLD, INK } from '../theme';
 
 /**
  * Sello de la nota para las portadas: un decagrama dorado con el número
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
   root: { alignItems: 'center', justifyContent: 'center' },
   number: {
     position: 'absolute',
-    color: '#1A1206',
+    color: INK,
     fontWeight: '900',
     fontVariant: ['tabular-nums'],
     letterSpacing: -0.3,

@@ -1,4 +1,4 @@
-import { BebasNeue_400Regular, useFonts } from '@expo-google-fonts/bebas-neue';
+import { LuckiestGuy_400Regular, useFonts } from '@expo-google-fonts/luckiest-guy';
 import { Stack } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
@@ -6,11 +6,12 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { startDatabase } from '../core/db/storage';
+import { finishIntro } from '../core/intro';
 import { setupPwa } from '../core/pwa';
 import { loadSettings } from '../core/settings';
 import { DatePickerHost } from '../core/ui/DatePicker';
 import { ToastHost } from '../core/ui/Toast';
-import { moviesTheme as th } from '../movies/theme';
+import { DISPLAY, moviesTheme as th } from '../movies/theme';
 
 /**
  * Aunque se abra una ficha directamente (recargar, un enlace), las pestañas
@@ -19,10 +20,11 @@ import { moviesTheme as th } from '../movies/theme';
 export const unstable_settings = { initialRouteName: '(tabs)' };
 
 export default function RootLayout() {
-  // Bebas Neue es la tipografía de titulares (theme.DISPLAY).
-  const [fontsLoaded, fontError] = useFonts({ BebasNeue_400Regular });
+  // Luckiest Guy es la tipografía de titulares (theme.DISPLAY).
+  const [fontsLoaded, fontError] = useFonts({ LuckiestGuy_400Regular });
   const [dbReady, setDbReady] = useState(false);
   const [failed, setFailed] = useState(false);
+  const booted = failed || ((fontsLoaded || !!fontError) && dbReady);
 
   useEffect(() => {
     Promise.all([startDatabase(), loadSettings()])
@@ -33,6 +35,11 @@ export default function RootLayout() {
       });
     setupPwa();
   }, []);
+
+  // También si ha fallado: el aviso de error no puede quedarse tapado por la intro.
+  useEffect(() => {
+    if (booted) finishIntro();
+  }, [booted]);
 
   if (failed) {
     return (
@@ -54,6 +61,7 @@ export default function RootLayout() {
             headerStyle: { backgroundColor: th.background },
             headerTintColor: th.text,
             headerShadowVisible: false,
+            headerTitleStyle: { fontFamily: DISPLAY, fontSize: 20, textTransform: 'uppercase' } as never,
             contentStyle: { backgroundColor: th.background },
             headerBackTitle: 'Atrás',
           }}

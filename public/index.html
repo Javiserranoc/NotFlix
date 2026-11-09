@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>NotFlix</title>
     <meta name="description" content="Tu biblioteca de cine y series." />
-    <meta name="theme-color" content="#0E0A0B" />
+    <meta name="theme-color" content="#120608" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="icon" type="image/png" href="/icons/icon-192.png" />
 
@@ -29,7 +29,7 @@
       html,
       body {
         height: 100%;
-        background: #0e0a0b;
+        background: #120608;
       }
       body {
         overflow: hidden;
@@ -51,11 +51,184 @@
         user-select: text;
         -webkit-user-select: text;
       }
+
+      /* Intro: arranca igual que el splash de iOS (el icono centrado) y el icono cobra vida. */
+      :root {
+        --stage: min(86vw, 50vh, 440px);
+        /* El iris se abre desde el rollo de la "O". */
+        --iris-x: calc(50% + var(--stage) * 0.0306);
+        --iris-y: calc(50% - var(--stage) * 0.1888);
+      }
+      html.intro-on #root {
+        position: relative;
+        z-index: 1;
+        clip-path: circle(0 at var(--iris-x) var(--iris-y));
+      }
+      html.intro-out #root {
+        clip-path: circle(100vmax at var(--iris-x) var(--iris-y));
+        transition: clip-path 0.56s cubic-bezier(0.6, 0, 0.2, 1);
+      }
+      #intro {
+        display: none;
+      }
+      html.intro-on #intro {
+        display: block;
+        position: fixed;
+        inset: 0;
+        overflow: hidden;
+        background: #120608;
+      }
+      .disc {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 32vmax;
+        height: 32vmax;
+        margin: -16vmax 0 0 -16vmax;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle closest-side,
+          #7c0d22 calc(100% - 100% / var(--k)),
+          #d7263d calc(100% - 58% / var(--k)),
+          #f2b233 calc(100% - 38% / var(--k)),
+          #7c0d22 100%
+        );
+        transform: scale(var(--k));
+        animation: disc 0.62s cubic-bezier(0.16, 0.9, 0.3, 1) calc(0.16s + (var(--k) - 1) * 0.045s) backwards;
+        will-change: transform;
+      }
+      .card,
+      .stage {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: var(--stage);
+        height: var(--stage);
+        margin: calc(var(--stage) / -2) 0 0 calc(var(--stage) / -2);
+        animation: stage 0.5s cubic-bezier(0.2, 1.5, 0.4, 1) 0.16s backwards;
+      }
+      .card {
+        border-radius: 22%;
+        background: radial-gradient(
+          circle closest-side,
+          #120608 42%,
+          #7c0d22 42%,
+          #d7263d 56%,
+          #f2b233 63%,
+          #7c0d22 75%,
+          #d7263d 89%,
+          #f2b233 96%,
+          #7c0d22 108%
+        );
+        animation: stage 0.5s cubic-bezier(0.2, 1.5, 0.4, 1) 0.16s backwards, card 0.18s linear 0.2s both;
+      }
+      .hole {
+        position: absolute;
+        left: 26%;
+        top: 26%;
+        width: 48%;
+        height: 48%;
+        border-radius: 50%;
+        background: #120608;
+      }
+      .hop {
+        position: absolute;
+        inset: 0;
+        animation: hop 0.38s ease-out calc(0.4s + var(--i) * 0.05s) backwards;
+      }
+      .l {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+      .reel {
+        transform-origin: 53.06% 31.12%;
+        animation: spin 1.5s linear 0.3s infinite;
+      }
+      @keyframes disc {
+        from {
+          transform: scale(0);
+        }
+      }
+      @keyframes card {
+        to {
+          opacity: 0;
+        }
+      }
+      @keyframes stage {
+        from {
+          transform: scale(var(--start, 0.4));
+        }
+      }
+      @keyframes hop {
+        40% {
+          transform: translateY(-5%) rotate(-2.5deg) scale(1.05);
+        }
+        72% {
+          transform: translateY(1%) rotate(1deg) scale(0.98, 1.02);
+        }
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
     </style>
+    <script>
+      // Va en línea para pintarse antes que el bundle; la app avisa con __introDone.
+      (function () {
+        var html = document.documentElement;
+        window.__introDone = function () {};
+        if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        html.classList.add('intro-on');
+        // Empieza del tamaño del icono en el splash de iOS: 256/750 del ancho.
+        var stage = Math.min(innerWidth * 0.86, innerHeight * 0.5, 440);
+        html.style.setProperty('--start', String((innerWidth * 0.3413) / stage));
+        var started = performance.now();
+        var MIN_MS = 1450; // se repite en cada arranque en frío: lo justo para ver el logo
+        var ready = false;
+        var skip = false;
+        var gone = false;
+        function reveal() {
+          if (gone) return;
+          gone = true;
+          html.classList.add('intro-out');
+          setTimeout(function () {
+            html.classList.remove('intro-on', 'intro-out');
+            var node = document.getElementById('intro');
+            if (node) node.parentNode.removeChild(node);
+          }, 620);
+        }
+        function maybe() {
+          if (!ready) return;
+          var wait = skip ? 0 : MIN_MS - (performance.now() - started);
+          if (wait > 0) setTimeout(reveal, wait);
+          else reveal();
+        }
+        window.__introDone = function () {
+          ready = true;
+          maybe();
+        };
+        addEventListener('pointerdown', function () {
+          skip = true;
+          maybe();
+        }, { once: true });
+        // Si la app no llega a arrancar, que no se quede el logo girando para siempre.
+        setTimeout(reveal, 15000);
+      })();
+    </script>
   </head>
 
   <body>
     <noscript>NotFlix necesita JavaScript.</noscript>
+    <div id="intro" aria-hidden="true">
+      <svg width="0" height="0" style="position: absolute"><defs><path id="d-n" d="M178.8 -270.0L268.7 -273.1L255.0 -14.9L155.2 -5.7L101.9 -144.0L93.5 -3.0L7.8 -3.0L14.7 -273.1L109.9 -277.6L175.8 -140.5L178.8 -270.0"/><clipPath id="c-n"><use href="#d-n"/></clipPath><g id="ink-n" transform="translate(142.6 472.0) rotate(-4 137.2 -136.5)" fill="#120608" stroke="#120608" stroke-width="32" stroke-linejoin="round"><use href="#d-n" transform="translate(13 16.25)"/><use href="#d-n"/></g><g id="face-n" transform="translate(142.6 472.0) rotate(-4 137.2 -136.5)"><use href="#d-n" fill="#C4162E"/><g clip-path="url(#c-n)"><use href="#d-n" transform="translate(-8 -8)" fill="#FFF6E0"/></g></g><path id="d-t" d="M3.4 -271.9L211.0 -272.3L209.1 -191.6L152.3 -189.3L137.9 -8.8L57.5 -4.6L57.9 -185.1L1.1 -182.1L3.4 -271.9"/><clipPath id="c-t"><use href="#d-t"/></clipPath><g id="ink-t" transform="translate(669.7 470.0) rotate(5 105.9 -136.5)" fill="#120608" stroke="#120608" stroke-width="32" stroke-linejoin="round"><use href="#d-t" transform="translate(13 16.25)"/><use href="#d-t"/></g><g id="face-t" transform="translate(669.7 470.0) rotate(5 105.9 -136.5)"><use href="#d-t" fill="#C4162E"/><g clip-path="url(#c-t)"><use href="#d-t" transform="translate(-8 -8)" fill="#FFF6E0"/></g></g><path id="d-f" d="M14.5 -274.6L190.0 -274.6Q188.9 -256.7 188.0 -239.2Q187.0 -221.7 185.5 -203.8L185.5 -203.8L104.7 -199.6L104.7 -175.6L174.8 -175.6L171.0 -116.5L104.4 -114.6L104.7 -1.9L8.4 0.0L14.5 -274.6"/><clipPath id="c-f"><use href="#d-f"/></clipPath><g id="ink-f" transform="translate(153.1 810.0) rotate(-4 95.0 -136.5)" fill="#120608" stroke="#120608" stroke-width="32" stroke-linejoin="round"><use href="#d-f" transform="translate(13 16.25)"/><use href="#d-f"/></g><g id="face-f" transform="translate(153.1 810.0) rotate(-4 95.0 -136.5)"><use href="#d-f" fill="#C4162E"/><g clip-path="url(#c-f)"><use href="#d-f" transform="translate(-8 -8)" fill="#FFF6E0"/></g></g><path id="d-l" d="M177.1 -108.5L177.1 -108.5L169.1 -24.0L8.8 -11.4Q9.9 -77.9 11.3 -143.6Q12.8 -209.3 14.9 -275.7L14.9 -275.7L113.9 -275.7Q109.5 -234.0 105.5 -192.4Q101.5 -150.8 99.8 -108.5L99.8 -108.5Q108.7 -108.2 117.5 -108.2Q126.3 -108.2 135.2 -108.2L135.2 -108.2Q145.9 -108.2 156.2 -108.4Q166.4 -108.5 177.1 -108.5"/><clipPath id="c-l"><use href="#d-l"/></clipPath><g id="ink-l" transform="translate(345.1 820.0) rotate(4 88.2 -136.5)" fill="#120608" stroke="#120608" stroke-width="32" stroke-linejoin="round"><use href="#d-l" transform="translate(13 16.25)"/><use href="#d-l"/></g><g id="face-l" transform="translate(345.1 820.0) rotate(4 88.2 -136.5)"><use href="#d-l" fill="#C4162E"/><g clip-path="url(#c-l)"><use href="#d-l" transform="translate(-8 -8)" fill="#FFF6E0"/></g></g><path id="d-i" d="M11.2 -262.8L112.5 -268.1L91.6 -8.8L11.2 -4.6L11.2 -262.8"/><clipPath id="c-i"><use href="#d-i"/></clipPath><g id="ink-i" transform="translate(523.5 806.0) rotate(-2 58.0 -136.5)" fill="#120608" stroke="#120608" stroke-width="32" stroke-linejoin="round"><use href="#d-i" transform="translate(13 16.25)"/><use href="#d-i"/></g><g id="face-i" transform="translate(523.5 806.0) rotate(-2 58.0 -136.5)"><use href="#d-i" fill="#C4162E"/><g clip-path="url(#c-i)"><use href="#d-i" transform="translate(-8 -8)" fill="#FFF6E0"/></g></g><path id="d-x" d="M149.1 -277.6L239.0 -267.0L164.7 -137.9L227.9 -25.5L148.3 -0.8L114.1 -78.5L73.7 -0.4L-8.6 -30.1L61.5 -140.5L-2.5 -256.7L84.7 -277.6L116.0 -201.1L149.1 -277.6"/><clipPath id="c-x"><use href="#d-x"/></clipPath><g id="ink-x" transform="translate(641.4 818.0) rotate(5 114.7 -136.5)" fill="#120608" stroke="#120608" stroke-width="32" stroke-linejoin="round"><use href="#d-x" transform="translate(13 16.25)"/><use href="#d-x"/></g><g id="face-x" transform="translate(641.4 818.0) rotate(5 114.7 -136.5)"><use href="#d-x" fill="#C4162E"/><g clip-path="url(#c-x)"><use href="#d-x" transform="translate(-8 -8)" fill="#FFF6E0"/></g></g></defs></svg>
+      <i class="disc" style="--k:6"></i><i class="disc" style="--k:5"></i><i class="disc" style="--k:4"></i><i class="disc" style="--k:3"></i><i class="disc" style="--k:2"></i><i class="disc" style="--k:1"></i>
+      <div class="card"></div>
+      <div class="stage"><i class="hole"></i><div class="hop" style="--i:0"><svg class="l" viewBox="0 0 1024 1024"><use href="#ink-n"/></svg></div><div class="hop" style="--i:2"><svg class="l" viewBox="0 0 1024 1024"><use href="#ink-t"/></svg></div><div class="hop" style="--i:3"><svg class="l" viewBox="0 0 1024 1024"><use href="#ink-f"/></svg></div><div class="hop" style="--i:4"><svg class="l" viewBox="0 0 1024 1024"><use href="#ink-l"/></svg></div><div class="hop" style="--i:5"><svg class="l" viewBox="0 0 1024 1024"><use href="#ink-i"/></svg></div><div class="hop" style="--i:6"><svg class="l" viewBox="0 0 1024 1024"><use href="#ink-x"/></svg></div><div class="hop" style="--i:1"><svg class="l" viewBox="0 0 1024 1024"><circle cx="556.3" cy="334.95" r="157.3" fill="#120608"/><circle cx="543.3" cy="318.7" r="157.3" fill="#120608"/></svg></div><div class="hop" style="--i:0"><svg class="l" viewBox="0 0 1024 1024"><use href="#face-n"/></svg></div><div class="hop" style="--i:2"><svg class="l" viewBox="0 0 1024 1024"><use href="#face-t"/></svg></div><div class="hop" style="--i:3"><svg class="l" viewBox="0 0 1024 1024"><use href="#face-f"/></svg></div><div class="hop" style="--i:4"><svg class="l" viewBox="0 0 1024 1024"><use href="#face-l"/></svg></div><div class="hop" style="--i:5"><svg class="l" viewBox="0 0 1024 1024"><use href="#face-i"/></svg></div><div class="hop" style="--i:6"><svg class="l" viewBox="0 0 1024 1024"><use href="#face-x"/></svg></div><div class="hop" style="--i:1"><svg class="l" viewBox="0 0 1024 1024"><circle cx="543.3" cy="318.7" r="141.3" fill="#FFF6E0"/></svg><svg class="l reel" viewBox="0 0 1024 1024"><circle cx="543.3" cy="241" r="29" fill="#C4162E"/><circle cx="610.6" cy="279.8" r="29" fill="#C4162E"/><circle cx="610.6" cy="357.6" r="29" fill="#C4162E"/><circle cx="543.3" cy="396.4" r="29" fill="#C4162E"/><circle cx="476" cy="357.6" r="29" fill="#C4162E"/><circle cx="476" cy="279.8" r="29" fill="#C4162E"/><circle cx="543.3" cy="318.7" r="17" fill="#120608"/></svg></div></div>
+    </div>
     <div id="root"></div>
   </body>
 </html>

@@ -1,5 +1,4 @@
 import { router } from 'expo-router';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeIn, FadeInDown, LinearTransition } from 'react-native-reanimated';
@@ -17,7 +16,7 @@ import { serializeSeasons } from '../seasons';
 import { formatHours, useMovieStats } from '../stats';
 import { fetchDetails, useTmdbEnabled } from '../tmdb';
 import { nowIso } from '../../core/db/sync';
-import { DISPLAY, GOLD, moviesTheme as th } from '../theme';
+import { DISPLAY, GOLD, moviesTheme as th, sectionTitle, stickerText } from '../theme';
 
 const MONTHS = ['E', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
 
@@ -95,8 +94,7 @@ function Stats({ kind }: { kind: MovieKind }) {
 
         {/* Dos cifras grandes, como una marquesina. */}
         <Animated.View key={`n-${year ?? 'all'}`} entering={FadeIn.duration(240)} style={styles.numbers}>
-          <View style={[styles.numberCard, styles.numberCardVelvet]}>
-            <LinearGradient colors={['#3A0B14', '#1A1315']} style={StyleSheet.absoluteFill} />
+          <View style={styles.numberCard}>
             <Text style={styles.bigNumber}>{s.watched}</Text>
             <Text style={styles.numberLabel}>
               {s.watched === 1 ? 'vez que ves algo' : 'veces que has visto algo'}
@@ -133,7 +131,7 @@ function Stats({ kind }: { kind: MovieKind }) {
                     />
                   ))}
                 </View>
-                <View style={styles.chart}>
+                <View style={styles.months}>
                   {MONTHS.map((m, i) => (
                     <Text
                       key={i}
@@ -250,7 +248,7 @@ function YearChip({ label, active, onPress }: { label: string; active: boolean; 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: th.background },
   titleRow: { paddingTop: 14, gap: 12 },
-  title: { color: th.text, fontFamily: DISPLAY, fontSize: 32, lineHeight: 34, letterSpacing: 0.5 },
+  title: { ...stickerText(2, 2), fontSize: 30, lineHeight: 36, letterSpacing: 0.5 },
   yearChip: {
     height: 30,
     paddingHorizontal: 12,
@@ -264,18 +262,18 @@ const styles = StyleSheet.create({
   numberCard: {
     flex: 1,
     borderRadius: 16,
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: th.border,
     backgroundColor: th.surface,
     padding: 16,
     gap: 2,
     overflow: 'hidden',
   },
-  numberCardVelvet: { borderColor: '#4A1520' },
-  bigNumber: { color: th.text, fontFamily: DISPLAY, fontSize: 44, lineHeight: 46 },
+  bigNumber: { color: th.text, fontFamily: DISPLAY, textTransform: 'uppercase', fontSize: 30, lineHeight: 38 },
   numberLabel: { color: th.textMuted, fontSize: 12 },
-  sectionLabel: { color: th.textMuted, fontSize: 11, fontWeight: '600', letterSpacing: 1.2 },
+  sectionLabel: sectionTitle,
   chart: { flexDirection: 'row', alignItems: 'flex-end', gap: 6, height: 104 },
+  months: { flexDirection: 'row', gap: 6 },
   bar: { flex: 1, borderTopLeftRadius: 4, borderTopRightRadius: 4 },
   monthLabel: { flex: 1, color: th.textMuted, fontSize: 9, textAlign: 'center' },
   genreRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
@@ -284,8 +282,8 @@ const styles = StyleSheet.create({
   fill: { height: 10, borderRadius: 5, backgroundColor: th.accent },
   genreCount: { width: 18, color: th.textMuted, fontSize: 12, textAlign: 'right', fontVariant: ['tabular-nums'] },
   shelf: { flexDirection: 'row', gap: 10 },
-  bestPoster: { borderRadius: 8, overflow: 'hidden' },
-  seal: { position: 'absolute', top: 3, right: 3 },
+  bestPoster: { borderRadius: 8 },
+  seal: { position: 'absolute', top: -6, right: -5, transform: [{ rotate: '8deg' }] },
   empty: { color: th.textMuted, fontSize: 14, lineHeight: 21, marginTop: 8 },
   note: { color: th.textMuted, fontSize: 11, lineHeight: 16, opacity: 0.85 },
   fixBox: {

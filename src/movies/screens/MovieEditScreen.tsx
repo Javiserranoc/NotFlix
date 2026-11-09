@@ -20,7 +20,7 @@ import { findByTmdbId, insertMovieReturningId, setStatus as applyStatus, updateM
 import type { MovieEntry } from '../schema';
 import { serializeSeasons } from '../seasons';
 import { fetchDetails, type TmdbHit, useTmdbEnabled } from '../tmdb';
-import { moviesTheme as th } from '../theme';
+import { INK, moviesTheme as th, stickerFace } from '../theme';
 import { nowIso } from '../../core/db/sync';
 
 /** Alta (sin id) o edición (con id). */
@@ -298,7 +298,7 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: th.surface,
     borderRadius: 12,
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: th.border,
     color: th.text,
     fontSize: 15,
@@ -334,6 +334,6 @@ const styles = StyleSheet.create({
     height: 36,
   },
   choiceText: { color: th.text, fontSize: 13, fontWeight: '600' },
-  save: { marginTop: 8, height: 52, borderRadius: 16, backgroundColor: th.accent, alignItems: 'center', justifyContent: 'center' },
-  saveText: { color: th.onAccent, fontSize: 16, fontWeight: '700' },
+  save: { marginTop: 8, height: 52, borderRadius: 16, ...stickerFace, alignItems: 'center', justifyContent: 'center' },
+  saveText: { color: INK, fontSize: 16, fontWeight: '800' },
 });

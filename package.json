@@ -13,7 +13,7 @@
     "postinstall": "node scripts/copy-wasm.mjs"
   },
   "dependencies": {
-    "@expo-google-fonts/bebas-neue": "^0.4.1",
+    "@expo-google-fonts/luckiest-guy": "^0.4.1",
     "@expo/metro-runtime": "~57.0.18",
     "@expo/vector-icons": "^15.0.2",
     "drizzle-orm": "^0.45.3",

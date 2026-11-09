@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Icon } from '../../core/ui/Icon';
 import { KIND_META, MOVIE_KINDS, type MovieKind } from '../enums';
-import { GOLD, moviesTheme as th } from '../theme';
+import { BRICK, CREAM, INK, moviesTheme as th } from '../theme';
 
 const KindContext = createContext<{ kind: MovieKind; setKind: (k: MovieKind) => void }>({
   kind: 'movie',
@@ -19,21 +19,21 @@ export function MoviesKindProvider({ children }: { children: ReactNode }) {
 
 export const useMoviesKind = () => useContext(KindContext).kind;
 
-/** El selector de arriba de cada pestaña. El oro marca dónde estás, como en la barra. */
+/** El selector de arriba de cada pestaña. La cara crema marca dónde estás, como en la barra. */
 export function KindSwitch() {
   const { kind, setKind } = useContext(KindContext);
   return (
     <View style={styles.root} accessibilityRole="tablist">
       {MOVIE_KINDS.map((k) => {
         const active = kind === k;
-        const color = active ? '#1A1206' : th.textMuted;
+        const color = active ? INK : th.textMuted;
         return (
           <Pressable
             key={k}
             onPress={() => setKind(k)}
             accessibilityRole="tab"
             accessibilityState={{ selected: active }}
-            style={[styles.option, active && { backgroundColor: GOLD }]}
+            style={[styles.option, active && styles.active]}
           >
             <Icon name={KIND_META[k].icon} size={16} color={color} />
             <Text style={[styles.label, { color }]}>{KIND_META[k].plural}</Text>
@@ -48,12 +48,13 @@ const styles = StyleSheet.create({
   root: {
     flexDirection: 'row',
     gap: 4,
-    padding: 3,
-    borderRadius: 12,
-    borderWidth: 1,
+    padding: 4,
+    borderRadius: 13,
+    borderWidth: 1.5,
     borderColor: th.border,
-    backgroundColor: 'rgba(0,0,0,0.32)',
+    backgroundColor: INK,
   },
+  active: { backgroundColor: CREAM, boxShadow: `2px 3px 0 ${BRICK}` },
   option: {
     flex: 1,
     height: 36,

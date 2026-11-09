@@ -1,12 +1,12 @@
 import { Image } from 'expo-image';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View, type ViewStyle } from 'react-native';
 
 import { StatusChip } from '../../core/ui/StatusChip';
 import { Icon } from '../../core/ui/Icon';
 import { KIND_META, STATUS_META } from '../enums';
 import type { MovieEntry } from '../schema';
 import { airedSeasons, parseSeasons, parseWatchedSeasons } from '../seasons';
-import { GOLD, moviesTheme as th } from '../theme';
+import { BRICK, CREAM, DISPLAY, GOLD, moviesTheme as th } from '../theme';
 
 export function movieMeta(e: MovieEntry) {
   const parts: string[] = [KIND_META[e.kind].label];
@@ -70,8 +70,14 @@ export function Poster({ entry, width }: { entry: MovieEntry; width: number }) {
     .join('');
 
   return (
-    <View style={[styles.poster, { width, height, backgroundColor: `hsl(${hue}, 45%, 30%)` }]}>
-      <Text style={[styles.initials, { fontSize: width * 0.34 }]}>{initials}</Text>
+    <View
+      style={[
+        styles.poster,
+        { width, height, backgroundColor: `hsl(${hue}, 45%, 30%)` },
+        width >= 70 ? styles.posterBig : styles.posterSmall,
+      ]}
+    >
+      <Text style={[styles.initials, { fontSize: width * 0.34, lineHeight: width * 0.42 }]}>{initials}</Text>
       {entry.posterUrl ? (
         <Image source={{ uri: entry.posterUrl }} style={StyleSheet.absoluteFill} contentFit="cover" />
       ) : null}
@@ -87,6 +93,8 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 16,
     backgroundColor: th.surface,
+    borderWidth: 1.5,
+    borderColor: th.border,
     overflow: 'hidden',
   },
   middle: { flex: 1, gap: 4 },
@@ -94,6 +102,8 @@ const styles = StyleSheet.create({
   meta: { color: th.textMuted, fontSize: 12, marginBottom: 2 },
   rating: { alignItems: 'center', minWidth: 32 },
   ratingText: { color: th.text, fontSize: 14, fontWeight: '700', fontVariant: ['tabular-nums'] },
-  poster: { borderRadius: 8, overflow: 'hidden', alignItems: 'center', justifyContent: 'center' },
-  initials: { color: '#fff', fontWeight: '800' },
+  poster: { borderRadius: 8, overflow: 'hidden', alignItems: 'center', justifyContent: 'center', borderColor: CREAM },
+  posterBig: { borderWidth: 2, boxShadow: `2px 3px 0 ${BRICK}` } as ViewStyle,
+  posterSmall: { borderWidth: 1.5 },
+  initials: { color: CREAM, fontFamily: DISPLAY },
 });

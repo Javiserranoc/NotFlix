@@ -9,7 +9,7 @@ import { PressScale } from '../../core/ui/PressScale';
 import type { MovieKind } from '../enums';
 import { addWishlistFromTmdb, findByTmdbIds, recommendationSource } from '../repo';
 import { fetchRecommendations, type TmdbHit, useTmdbEnabled } from '../tmdb';
-import { GOLD, moviesTheme as th } from '../theme';
+import { CREAM, GOLD, INK, moviesTheme as th, sectionTitle } from '../theme';
 
 /**
  * "Porque te gustó X": la lista de parecidos que da TMDB a partir de un título
@@ -80,7 +80,7 @@ export function RecommendedRow({ kind }: { kind: MovieKind }) {
                 <Image source={{ uri: h.posterUrl }} style={StyleSheet.absoluteFill} contentFit="cover" />
               ) : null}
               <View style={styles.plus}>
-                <Icon name="plus" size={13} color="#1A1206" />
+                <Icon name="plus" size={13} color={INK} />
               </View>
             </View>
             <Text style={styles.title} numberOfLines={2}>
@@ -94,14 +94,16 @@ export function RecommendedRow({ kind }: { kind: MovieKind }) {
 }
 
 const styles = StyleSheet.create({
-  label: { color: th.textMuted, fontSize: 11, fontWeight: '600', letterSpacing: 1.2, paddingHorizontal: 20 },
-  shelf: { paddingHorizontal: 20, gap: 10 },
+  label: { ...sectionTitle, paddingHorizontal: 20 },
+  shelf: { paddingHorizontal: 20, paddingBottom: 4, gap: 10 },
   item: { width: 84, gap: 5 },
   poster: {
     width: 84,
     height: 126,
     borderRadius: 8,
     backgroundColor: th.surfaceHigh,
+    borderWidth: 2,
+    borderColor: CREAM,
     overflow: 'hidden',
   },
   plus: {
