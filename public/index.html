@@ -29,6 +29,8 @@
       html,
       body {
         height: 100%;
+        /* El 100% de iOS no sigue a la barra de Safari: al irse deja un hueco abajo. */
+        height: 100dvh;
         background: #120608;
       }
       body {

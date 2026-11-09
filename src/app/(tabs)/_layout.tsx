@@ -12,7 +12,8 @@ export default function MoviesTabsLayout() {
   return (
     <MoviesKindProvider>
       <Tabs>
-        <TabSlot />
+        {/* TabSlot no encoge por defecto: crecería con el contenido y no habría scroll. */}
+        <TabSlot style={{ flexShrink: 1 }} />
         <TabList asChild>
           <MoviesTabBar>
             <TabTrigger name="index" href="/" asChild>
