@@ -1,0 +1,16 @@
+{
+  "expo": {
+    "name": "NotFlix",
+    "slug": "notflix",
+    "scheme": "notflix",
+    "version": "1.0.0",
+    "platforms": ["web"],
+    "userInterfaceStyle": "dark",
+    "web": {
+      "bundler": "metro",
+      "output": "single"
+    },
+    "plugins": ["expo-router"],
+    "experiments": { "typedRoutes": false }
+  }
+}

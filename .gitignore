@@ -1,0 +1,14 @@
+node_modules/
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+.metro-health-check*
+npm-debug.*
+*.tsbuildinfo
+.DS_Store
+.env
+.env*.local
+*.local.md
+# Se copia de node_modules al instalar (scripts/copy-wasm.mjs)
+public/sql-wasm.wasm
